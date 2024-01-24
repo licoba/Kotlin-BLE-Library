@@ -10,11 +10,17 @@ android {
 }
 
 dependencies {
-    implementation(project(":advertiser"))
-    implementation(project(":scanner"))
-    implementation(project(":client"))
-    implementation(project(":server"))
-    implementation(project(":uiscanner"))
+//    implementation(project(":advertiser"))
+//    implementation(project(":scanner"))
+//    implementation(project(":client"))
+//    implementation(project(":uiscanner"))
+//    implementation(project(":server"))
+    implementation(libs.nordic.blek.advertiser)
+    implementation(libs.nordic.blek.scanner)
+    implementation(libs.nordic.blek.client)
+    implementation(libs.nordic.blek.server)
+    implementation(libs.nordic.blek.uiscanner)
+
 
     implementation(libs.nordic.theme)
     implementation(libs.nordic.navigation)
