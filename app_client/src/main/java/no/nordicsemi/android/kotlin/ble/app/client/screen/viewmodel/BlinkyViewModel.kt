@@ -2,6 +2,7 @@ package no.nordicsemi.android.kotlin.ble.app.client.screen.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import no.nordicsemi.android.common.navigation.viewmodel.SimpleNavigationViewMod
 import no.nordicsemi.android.kotlin.ble.app.client.BlinkyDestinationId
 import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.BlinkyButtonParser
 import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.BlinkyLedParser
+import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3Parser
 import no.nordicsemi.android.kotlin.ble.app.client.screen.view.BlinkyViewState
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
@@ -48,8 +50,8 @@ class BlinkyViewModel @Inject constructor(
         startGattClient(blinkyDevice)
     }
 
-    private lateinit var ledCharacteristic: ClientBleGattCharacteristic
-    private lateinit var buttonCharacteristic: ClientBleGattCharacteristic
+    private lateinit var commandWriteCharacteristic: ClientBleGattCharacteristic
+    private lateinit var commandNotifyCharacteristic: ClientBleGattCharacteristic
 
     private fun startGattClient(blinkyDevice: ServerDevice) = viewModelScope.launch {
         //Connect a Bluetooth LE device.
@@ -68,18 +70,45 @@ class BlinkyViewModel @Inject constructor(
 
     private suspend fun configureGatt(services: ClientBleGattServices) {
         //Remember needed service and characteristics which are used to communicate with the DK.
-        val service = services.findService(BlinkySpecifications.UUID_SERVICE_DEVICE)!!
-        ledCharacteristic = service.findCharacteristic(BlinkySpecifications.UUID_LED_CHAR)!!
-        buttonCharacteristic = service.findCharacteristic(BlinkySpecifications.UUID_BUTTON_CHAR)!!
+        val service = services.findService(WSeriesServiceUUID.COMMAND_DATA)!!
+        Log.d("TAG", "找到了指定的服务：$service")
 
+        commandWriteCharacteristic =
+            service.findCharacteristic(WSeriesServiceUUID.COMMAND_DATA_WRITE)!!
+        commandNotifyCharacteristic =
+            service.findCharacteristic(WSeriesServiceUUID.COMMAND_DATA_NOTIFY)!!
+
+        commandNotifyCharacteristic.getNotifications()
         //Observe button characteristic which detects when a button is pressed
-        buttonCharacteristic.getNotifications().onEach {
-            _state.value = _state.value.copy(isButtonPressed = BlinkyButtonParser.isButtonPressed(it))
+        commandNotifyCharacteristic.getNotifications().onEach {
+            Log.d("TAG", "收到了通知1  $it")
+            W3Parser.parseW3Packet(it)?.let {
+                Log.d("TAG", "解析成功  $it")
+            }
+//            _state.value = _state.value.copy(isButtonPressed = BlinkyButtonParser.isButtonPressed(it))
         }.launchIn(viewModelScope)
 
-        //Check the initial state of the Led.
-        val isLedOn = BlinkyLedParser.isLedOn(ledCharacteristic.read())
-        _state.value = _state.value.copy(isLedOn = isLedOn)
+        // 读取信息
+
+        val service1 = services.findService(StandServiceUUID.S_DEVICE_INFO)!!
+        Log.d("TAG", "找到了设备信息服务：$service")
+        val cha1 = service1.findCharacteristic(StandServiceUUID.C_Serial_Number)!!
+        val cha2 = service1.findCharacteristic(StandServiceUUID.C_Manufacturer_Name)!!
+
+
+
+
+        val service2 = services.findService(WSeriesServiceUUID.AUDIO_DATA)!!
+        Log.d("TAG", "找到了设备信息服务：$service")
+        val cha11 = service2.findCharacteristic(WSeriesServiceUUID.AUDIO_DATA_WRITE)!!
+        val cha21 = service2.findCharacteristic(WSeriesServiceUUID.AUDIO_DATA_NOTIFY)!!
+
+        cha21.getNotifications().onEach {
+            Log.d("TAG", "收到了通知2 $it")
+        }.launchIn(viewModelScope)
+
+//        val isLedOn = BlinkyLedParser.isLedOn(commandNotifyCharacteristic.read())
+//        _state.value = _state.value.copy(isLedOn = isLedOn)
     }
 
     @SuppressLint("NewApi")
@@ -87,10 +116,10 @@ class BlinkyViewModel @Inject constructor(
         viewModelScope.launch {
             if (state.value.isLedOn) {
                 _state.value = _state.value.copy(isLedOn = false)
-                ledCharacteristic.write(DataByteArray.from(0x00))
+                commandWriteCharacteristic.write(DataByteArray.from(0x00))
             } else {
                 _state.value = _state.value.copy(isLedOn = true)
-                ledCharacteristic.write(DataByteArray.from(0x01))
+                commandWriteCharacteristic.write(DataByteArray.from(0x01))
             }
         }
     }
@@ -101,4 +130,11 @@ class BlinkyViewModel @Inject constructor(
             navigator.navigateUp()
         }
     }
+
+    fun DataByteArray.toHexStr(): String {
+        return String(this.value, Charsets.UTF_8)
+
+
+    }
+
 }

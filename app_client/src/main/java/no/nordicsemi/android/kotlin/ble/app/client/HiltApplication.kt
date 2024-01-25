@@ -45,6 +45,7 @@ class HiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        server.start(this)
+        // 不开启服务
+//        server.start(this)
     }
 }
