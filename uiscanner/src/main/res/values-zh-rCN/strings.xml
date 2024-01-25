@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bluetooth">蓝牙</string>
+    <string name="location">位置</string>
+
+    <string name="filters">过滤器</string>
+    <string name="filter_uuid">全部</string>
+    <string name="filter_nearby">附近</string>
+    <string name="filter_name">名称</string>
+
+    <string name="device_no_name">未命名</string>
+    <string name="bonded_devices">已配对设备</string>
+    <string name="discovered_devices">已发现设备</string>
+
+    <string name="scan_failed">扫描失败，错误 %d。</string>
+    <string name="scanner_screen">扫描器</string>
+    <string name="scanner_error">扫描失败</string>
+    <string name="action_location_settings">位置设置</string>
+    <string name="action_go_up">返回</string>
+
+    <string name="no_device_guide_title">看不到你的设备？</string>
+    <string name="no_device_guide_info">1. 确保设备已<b>开启</b>并已连接到电源。\n\n2. 确保已刷新适当的固件和SoftDevice。</string>
+    <string name="no_device_guide_location_info">3. 位置已关闭。大多数Android手机需要开启位置才能扫描蓝牙LE设备。如果你确定你的设备正在广播并且在这里没有显示出来，点击下面的按钮以启用位置。</string>
+
+    <string name="navigation_item_accessibility">应用栏导航返回图标。</string>
+
+    <string name="bonding_in_progress">配对进行中。请按照屏幕上的指示操作。</string>
+    <string name="bonding_success">配对成功。请等待重定向到所选的配置文件屏幕。</string>
+    <string name="bonding_error">我们无法在没有配对的情况下从外设获取数据。请配对设备。</string>
+
+    <string name="device_disconnected">已断开连接</string>
+    <string name="device_reason_user">设备成功断开连接。</string>
+    <string name="device_reason_unknown">设备因未知原因断开连接。</string>
+    <string name="device_reason_link_loss">设备信号已丢失。</string>
+    <string name="device_reason_missing_service">设备因缺少所需服务而断开连接。</string>
+    <string name="device_reason_terminate_local_host">本地设备发起的断开连接。</string>
+    <string name="device_reason_terminate_peer_user">远程设备发起的优雅断开连接。</string>
+    <string name="device_reason_cancelled">连接尝试已取消。</string>
+    <string name="device_reason_timeout">连接超时。</string>
+
+    <string name="device_connecting">正在连接…</string>
+    <string name="device_explanation">手机正在尝试连接到外设。</string>
+    <string name="device_please_wait">请稍候…</string>
+</resources>

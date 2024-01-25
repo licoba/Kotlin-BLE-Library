@@ -51,7 +51,6 @@ import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanFilter
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResultData
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScannerSettings
-import no.nordicsemi.android.kotlin.ble.mock.MockDevices
 import no.nordicsemi.android.kotlin.ble.scanner.errors.ScanFailedError
 import no.nordicsemi.android.kotlin.ble.scanner.errors.ScanningFailedException
 import no.nordicsemi.android.kotlin.ble.scanner.settings.toNative
@@ -93,11 +92,11 @@ class BleScanner(
         settings: BleScannerSettings = BleScannerSettings(),
     ): Flow<BleScanResult> = callbackFlow {
         launch {
-            MockDevices.devices.collect {
-                it.filterKeys { it.isIncluded(filters) }
-                    .filterValues { it.isIncluded(filters) }
-                    .forEach { trySend(BleScanResult(it.key, it.value)) }
-            }
+//            MockDevices.devices.collect {
+//                it.filterKeys { it.isIncluded(filters) }
+//                    .filterValues { it.isIncluded(filters) }
+//                    .forEach { trySend(BleScanResult(it.key, it.value)) }
+//            }
         }
 
         if (settings.includeStoredBondedDevices) {

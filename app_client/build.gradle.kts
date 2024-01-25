@@ -13,13 +13,14 @@ dependencies {
 //    implementation(project(":advertiser"))
 //    implementation(project(":scanner"))
 //    implementation(project(":client"))
-//    implementation(project(":uiscanner"))
+    // scanner用本地的，做好国际化，可能还有一些定制需求
+    implementation(project(":uiscanner"))
 //    implementation(project(":server"))
     implementation(libs.nordic.blek.advertiser)
     implementation(libs.nordic.blek.scanner)
     implementation(libs.nordic.blek.client)
     implementation(libs.nordic.blek.server)
-    implementation(libs.nordic.blek.uiscanner)
+//    implementation(libs.nordic.blek.uiscanner)
 
 
     implementation(libs.nordic.theme)
