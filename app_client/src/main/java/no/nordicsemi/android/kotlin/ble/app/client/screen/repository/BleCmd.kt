@@ -11,7 +11,7 @@ package no.nordicsemi.android.kotlin.ble.app.client.screen.repository
  *
  * @property header 固定的包头，默认值是0x746b。
  * @property cmd 命令码。
- * @property type 类型码。
+ * @property type 类型码/功能码
  * @property length 数据的长度，只计算数据的长度，不包括前5字节的头部。
  * @property data 数据，长度由具体的项目决定。
  */
@@ -20,13 +20,24 @@ data class W3Packet(
     val cmd: W3CMD, // 命令码
     val type: Byte, // 类型码
     val length: Byte, // 数据的长度
-    val data: ByteArray // 数据
+    var data: ByteArray // 数据
 
 ) {
     override fun toString(): String {
         return "W3Packet(header=${header.toHex()}, cmd=$cmd, type=${type.toHex()}, length=${
             length.toHex()
         }, data=${data.toHex()})"
+    }
+
+    // 添加一个方法，将所有的字段转为ByteArray
+    fun toByteArray(): ByteArray {
+        return byteArrayOf(
+            *(header.toByteArray()),
+            cmd.byte,
+            type,
+            length,
+            *data
+        )
     }
 
 }

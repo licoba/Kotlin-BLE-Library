@@ -16,9 +16,11 @@ import no.nordicsemi.android.common.core.DataByteArray
 import no.nordicsemi.android.common.navigation.Navigator
 import no.nordicsemi.android.common.navigation.viewmodel.SimpleNavigationViewModel
 import no.nordicsemi.android.kotlin.ble.app.client.BlinkyDestinationId
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.BlinkyButtonParser
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.BlinkyLedParser
+import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.DataConversion.decodeHexString
+import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3CMD
+import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3Packet
 import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3Parser
+import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.from
 import no.nordicsemi.android.kotlin.ble.app.client.screen.view.BlinkyViewState
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
@@ -43,10 +45,12 @@ class BlinkyViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     private var client: ClientBleGatt? = null
+    private var serverDevice: ServerDevice? = null
 
     init {
         val blinkyDevice = parameterOf(BlinkyDestinationId)
         _device.value = blinkyDevice
+        serverDevice = blinkyDevice
         startGattClient(blinkyDevice)
     }
 
@@ -82,8 +86,21 @@ class BlinkyViewModel @Inject constructor(
         //Observe button characteristic which detects when a button is pressed
         commandNotifyCharacteristic.getNotifications().onEach {
             Log.d("TAG", "收到了通知1  $it")
-            W3Parser.parseW3Packet(it)?.let {
-                Log.d("TAG", "解析成功  $it")
+            W3Parser.parseW3Packet(it)?.let { packet ->
+                Log.d("TAG", "解析成功  $packet")
+                if (packet.cmd == W3CMD.Auth) {
+                    if (packet.length.toInt() == 0)
+                        Log.d("TAG", "认证成功")
+                    else {
+                        Log.d("TAG", "收到了认证指令，开始认证")
+                        commandWriteCharacteristic.write(
+                            buildAppAuth(
+                                packet,
+                                serverDevice!!.address
+                            )
+                        )
+                    }
+                }
             }
 //            _state.value = _state.value.copy(isButtonPressed = BlinkyButtonParser.isButtonPressed(it))
         }.launchIn(viewModelScope)
@@ -96,14 +113,12 @@ class BlinkyViewModel @Inject constructor(
         val cha2 = service1.findCharacteristic(StandServiceUUID.C_Manufacturer_Name)!!
 
 
-
-
         val service2 = services.findService(WSeriesServiceUUID.AUDIO_DATA)!!
         Log.d("TAG", "找到了设备信息服务：$service")
         val cha11 = service2.findCharacteristic(WSeriesServiceUUID.AUDIO_DATA_WRITE)!!
         val cha21 = service2.findCharacteristic(WSeriesServiceUUID.AUDIO_DATA_NOTIFY)!!
 
-        cha21.getNotifications().onEach {
+        cha21.getNotifications().onEach{
             Log.d("TAG", "收到了通知2 $it")
         }.launchIn(viewModelScope)
 
@@ -131,10 +146,26 @@ class BlinkyViewModel @Inject constructor(
         }
     }
 
-    fun DataByteArray.toHexStr(): String {
-        return String(this.value, Charsets.UTF_8)
 
-
+    fun buildAppAuth(packet: W3Packet, mac: String): DataByteArray {
+        val rxData = packet.data
+        val bleMac = decodeHexString(mac.replace(":", ""))
+        val macAndRand = arrayAdd(bleMac, rxData.copyOfRange(0, 6))
+        // 将macAndRand 转化为 DataByteArray
+        return DataByteArray.from(packet.apply { data = macAndRand })
     }
 
+    // 两个字节数组相加，去掉进位取余数，得到新的字节数组
+    private fun arrayAdd(array1: ByteArray, array2: ByteArray): ByteArray {
+        val len = array1.size.coerceAtMost(array2.size)
+        val out = (if (array1.size > array2.size) array1 else array2).copyOf(len)
+        val intArray1 = array1.map { it.toInt() and 0xff }
+        val intArray2 = array2.map { it.toInt() and 0xff }
+        for (i in 0 until len) {
+            out[i] = (intArray1[i] + intArray2[i]).toByte()
+        }
+        return out
+    }
 }
+
+

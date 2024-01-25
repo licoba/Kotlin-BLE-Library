@@ -108,3 +108,7 @@ fun Short.toHex(): String = "%04x".format(this).uppercase()
 fun UByte.toHex(): String = "%02x".format(toInt()).uppercase()
 fun UInt.toHex(): String = "%08x".format(toInt()).uppercase()
 fun ByteArray.toHex(): String = joinToString("") { String.format("%02X", it) }.uppercase()
+
+fun Short.toByteArray(): ByteArray {
+    return byteArrayOf((this.toInt() shr 8 and 0xFF).toByte(), (this.toInt() and 0xFF).toByte())
+}
