@@ -19,7 +19,7 @@
     <string name="action_go_up">返回</string>
 
     <string name="no_device_guide_title">看不到你的设备？</string>
-    <string name="no_device_guide_info">1. 确保设备已<b>开启</b>并已连接到电源。\n\n2. 确保已刷新适当的固件和SoftDevice。</string>
+    <string name="no_device_guide_info">1. 确保设备已<b>开机</b>并已连接到电源。\n\n2. 检查上方筛选条件是否过于严格。</string>
     <string name="no_device_guide_location_info">3. 位置已关闭。大多数Android手机需要开启位置才能扫描蓝牙LE设备。如果你确定你的设备正在广播并且在这里没有显示出来，点击下面的按钮以启用位置。</string>
 
     <string name="navigation_item_accessibility">应用栏导航返回图标。</string>

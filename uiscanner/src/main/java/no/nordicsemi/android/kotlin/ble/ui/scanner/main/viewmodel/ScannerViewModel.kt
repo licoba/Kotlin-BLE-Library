@@ -57,6 +57,7 @@ import javax.inject.Inject
 
 private const val FILTER_RSSI = -50 // [dBm]
 
+// 扫描的ViewModel
 @HiltViewModel
 internal class ScannerViewModel @Inject constructor(
     private val scannerRepository: ScannerRepository,
@@ -65,9 +66,9 @@ internal class ScannerViewModel @Inject constructor(
 
     val filterConfig = MutableStateFlow(
         DevicesScanFilter(
-            filterUuidRequired = true,
-            filterNearbyOnly = false,
-            filterWithNames = true
+            filterUuidRequired = true,  // 全部的BLE设备
+            filterNearbyOnly = false,  // 只筛选附近设备
+            filterWithNames = false  // 只筛选有名字的设备
         )
     )
 

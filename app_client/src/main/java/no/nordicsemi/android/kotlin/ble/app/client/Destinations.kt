@@ -20,7 +20,6 @@ val ScannerDestination = defineDestination(ScannerDestinationId) {
     val navigationViewModel = hiltViewModel<SimpleNavigationViewModel>()
 
     ScannerScreen(
-//        uuid = ParcelUuid(BlinkySpecifications.UUID_SERVICE_DEVICE),
         uuid = ParcelUuid(ScanUUIDFilter.WT2_Edge.uuid),
         cancellable = false,
         onResult = {

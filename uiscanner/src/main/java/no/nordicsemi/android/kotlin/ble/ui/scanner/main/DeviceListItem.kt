@@ -31,11 +31,16 @@
 
 package no.nordicsemi.android.kotlin.ble.ui.scanner.main
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material3.MaterialTheme
@@ -44,26 +49,50 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.nordicsemi.android.common.theme.NordicTheme
 import no.nordicsemi.android.common.theme.view.CircularIcon
 import no.nordicsemi.android.common.theme.view.RssiIcon
 import no.nordicsemi.android.kotlin.ble.ui.scanner.R
 
+// 这个才是真正的显示的Item
 @Composable
 fun DeviceListItem(
     name: String?,
     address: String,
     modifier: Modifier = Modifier,
+    firmwareType: Int = 1, // 0:普通固件  1:用户固件  2:工厂固件
     extras: @Composable () -> Unit = {},
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically)
+        verticalAlignment = Alignment.CenterVertically
+    )
     {
-        CircularIcon(Icons.Default.Bluetooth)
+
+        Box {
+            CircularIcon(Icons.Default.Bluetooth)
+            if (firmwareType != 0) {
+                Text(
+                    text = if (firmwareType == 1) "用户" else if(firmwareType == 2)"工厂" else "正常",
+                    fontSize = 8.sp,
+                    lineHeight = 11.sp,
+                    color = if (firmwareType == 1) Color.Black else Color.White,
+                    textAlign = TextAlign.Center, // 设置文字居中对齐
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .background(if (firmwareType == 1) Color.Green else Color.Blue, shape = RoundedCornerShape(2.dp))
+                        .width(22.dp)
+                        .height(11.dp)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.width(16.dp))
 
@@ -78,10 +107,10 @@ fun DeviceListItem(
                     style = MaterialTheme.typography.titleMedium
                 )
             } ?: Text(
-                    text = stringResource(id = R.string.device_no_name),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.alpha(0.7f)
-                )
+                text = stringResource(id = R.string.device_no_name),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.alpha(0.7f)
+            )
             Text(
                 text = address,
                 style = MaterialTheme.typography.bodyMedium
