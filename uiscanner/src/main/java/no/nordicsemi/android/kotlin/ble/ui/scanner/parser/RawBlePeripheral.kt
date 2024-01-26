@@ -1,7 +1,4 @@
-package no.nordicsemi.android.kotlin.ble.ui.scanner.repository
-
-import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResultData
-import java.io.Serializable
+package no.nordicsemi.android.kotlin.ble.ui.scanner.parser
 
 
 /**

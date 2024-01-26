@@ -1,7 +1,6 @@
 package no.nordicsemi.android.kotlin.ble.ui.scanner.parser
 
 import no.nordicsemi.android.common.core.DataByteArray
-import no.nordicsemi.android.kotlin.ble.ui.scanner.repository.RawBlePeripheral
 
 
 /**
