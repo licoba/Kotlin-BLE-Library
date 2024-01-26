@@ -1,4 +1,4 @@
-package no.nordicsemi.android.kotlin.ble.app.client.screen.repository
+package no.nordicsemi.android.kotlin.ble.ui.scanner.main
 
 /*
  W 系列指令内容      header(0x74,0x6b)     cmd       paramLen  [+ param]

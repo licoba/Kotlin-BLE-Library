@@ -1,4 +1,4 @@
-package no.nordicsemi.android.kotlin.ble.app.client.screen.repository
+package no.nordicsemi.android.kotlin.ble.ui.scanner.main
 
 import java.util.Locale
 

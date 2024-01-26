@@ -42,6 +42,8 @@ import no.nordicsemi.android.kotlin.ble.ui.scanner.repository.ScanningState
 import no.nordicsemi.android.kotlin.ble.ui.scanner.view.internal.ScanEmptyView
 import no.nordicsemi.android.kotlin.ble.ui.scanner.view.internal.ScanErrorView
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResults
+import no.nordicsemi.android.kotlin.ble.ui.scanner.parser.RawBlePeripheral
+import no.nordicsemi.android.kotlin.ble.ui.scanner.parser.StandParser
 
 @Composable
 fun DevicesListView(
@@ -54,8 +56,7 @@ fun DevicesListView(
     },
 ) {
     LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp)
+        modifier = modifier, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp)
     ) {
         when (state) {
             is ScanningState.Loading -> item { ScanEmptyView(isLocationRequiredAndDisabled) }
@@ -66,6 +67,7 @@ fun DevicesListView(
                     DeviceListItems(state, onClick, deviceItem)
                 }
             }
+
             is ScanningState.Error -> item { ScanErrorView(state.errorCode) }
         }
     }
@@ -75,11 +77,9 @@ fun DevicesListView(
 @Composable
 private fun DeviceListView_Preview_LocationRequired() {
     NordicTheme {
-        DevicesListView(
-            isLocationRequiredAndDisabled = true,
+        DevicesListView(isLocationRequiredAndDisabled = true,
             state = ScanningState.Loading,
-            onClick = {}
-        )
+            onClick = {})
     }
 }
 
@@ -87,11 +87,9 @@ private fun DeviceListView_Preview_LocationRequired() {
 @Composable
 private fun DeviceListView_Preview_LocationNotRequired() {
     NordicTheme {
-        DevicesListView(
-            isLocationRequiredAndDisabled = false,
+        DevicesListView(isLocationRequiredAndDisabled = false,
             state = ScanningState.Loading,
-            onClick = {}
-        )
+            onClick = {})
     }
 }
 
@@ -99,11 +97,9 @@ private fun DeviceListView_Preview_LocationNotRequired() {
 @Composable
 private fun DeviceListView_Preview_Error() {
     NordicTheme {
-        DevicesListView(
-            isLocationRequiredAndDisabled = true,
+        DevicesListView(isLocationRequiredAndDisabled = true,
             state = ScanningState.Error(1),
-            onClick = {}
-        )
+            onClick = {})
     }
 }
 
@@ -111,10 +107,8 @@ private fun DeviceListView_Preview_Error() {
 @Composable
 private fun DeviceListView_Preview_Empty() {
     NordicTheme {
-        DevicesListView(
-            isLocationRequiredAndDisabled = true,
+        DevicesListView(isLocationRequiredAndDisabled = true,
             state = ScanningState.DevicesDiscovered(emptyList()),
-            onClick = {}
-        )
+            onClick = {})
     }
 }

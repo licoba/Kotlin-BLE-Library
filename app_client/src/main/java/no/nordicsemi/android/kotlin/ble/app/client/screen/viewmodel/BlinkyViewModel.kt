@@ -16,11 +16,11 @@ import no.nordicsemi.android.common.core.DataByteArray
 import no.nordicsemi.android.common.navigation.Navigator
 import no.nordicsemi.android.common.navigation.viewmodel.SimpleNavigationViewModel
 import no.nordicsemi.android.kotlin.ble.app.client.BlinkyDestinationId
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.DataConversion.decodeHexString
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3CMD
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3Packet
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.DataConversion.decodeHexString
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.W3CMD
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.W3Packet
 import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.W3Parser
-import no.nordicsemi.android.kotlin.ble.app.client.screen.repository.from
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.from
 import no.nordicsemi.android.kotlin.ble.app.client.screen.view.BlinkyViewState
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic

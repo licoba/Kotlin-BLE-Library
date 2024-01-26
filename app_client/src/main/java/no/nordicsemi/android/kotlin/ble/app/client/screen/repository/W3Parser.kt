@@ -2,6 +2,8 @@ package no.nordicsemi.android.kotlin.ble.app.client.screen.repository
 
 import android.util.Log
 import no.nordicsemi.android.common.core.DataByteArray
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.W3CMD
+import no.nordicsemi.android.kotlin.ble.ui.scanner.main.W3Packet
 
 object W3Parser {
 

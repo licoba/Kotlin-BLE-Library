@@ -42,6 +42,8 @@ import androidx.compose.ui.res.stringResource
 import no.nordicsemi.android.kotlin.ble.ui.scanner.main.DeviceListItem
 import no.nordicsemi.android.kotlin.ble.ui.scanner.view.ScannerAppBar
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResults
+import no.nordicsemi.android.kotlin.ble.ui.scanner.parser.RawBlePeripheral
+import no.nordicsemi.android.kotlin.ble.ui.scanner.parser.StandParser
 
 /**
  * 扫描页面
@@ -53,7 +55,8 @@ fun ScannerScreen(
     cancellable: Boolean = true,
     onResult: (ScannerScreenResult) -> Unit,
     deviceItem: @Composable (BleScanResults) -> Unit = {
-        Log.d("TAG","扫描结果 $it")
+        val rawBlePeripheral = StandParser<RawBlePeripheral>().parseBleData(it.lastScanResult!!)
+        Log.d("TAG", "解析结果: $rawBlePeripheral")
         DeviceListItem(it.advertisedName ?: it.device.name, it.device.address)
     }
 ) {
