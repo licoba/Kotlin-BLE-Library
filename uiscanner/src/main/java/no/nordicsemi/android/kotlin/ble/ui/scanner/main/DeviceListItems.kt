@@ -84,6 +84,10 @@ fun LazyListScope.DeviceListItems(
     }
 }
 
+
+/**
+ * 可以点击的 ClickableDeviceItem
+ */
 @Composable
 private fun ClickableDeviceItem(
     device: BleScanResults,

@@ -31,6 +31,7 @@
 package no.nordicsemi.android.kotlin.ble.ui.scanner
 
 import android.os.ParcelUuid
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +43,9 @@ import no.nordicsemi.android.kotlin.ble.ui.scanner.main.DeviceListItem
 import no.nordicsemi.android.kotlin.ble.ui.scanner.view.ScannerAppBar
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResults
 
+/**
+ * 扫描页面
+ */
 @Composable
 fun ScannerScreen(
     title: String = stringResource(id = R.string.scanner_screen),
@@ -49,6 +53,7 @@ fun ScannerScreen(
     cancellable: Boolean = true,
     onResult: (ScannerScreenResult) -> Unit,
     deviceItem: @Composable (BleScanResults) -> Unit = {
+        Log.d("TAG","扫描结果 $it")
         DeviceListItem(it.advertisedName ?: it.device.name, it.device.address)
     }
 ) {
